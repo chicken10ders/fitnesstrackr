@@ -9,7 +9,9 @@
     "start:dev": "nodemon index.js",
     "start": "node index.js",
     "test": "jest --runInBand",
-    "test:watch": "jest --watchAll --runInBand"
+    "test:watch": "jest --watchAll --runInBand",
+    "test:watch:db": "jest --watchAll db",
+    "test:wathc:api": "jest --watchAll api"
   },
   "repository": {
     "type": "git"
@@ -31,6 +33,6 @@
     "faker": "^4.1.0",
     "jest": "^26.0.1",
     "jsonwebtoken": "^8.5.1",
-    "pg": "^8.2.1"
+    "pg": "^8.7.3"
   }
 }
