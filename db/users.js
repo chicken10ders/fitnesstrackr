@@ -3,7 +3,9 @@ const bcrypt = require("bcrypt");
 
 async function createUser({ username, password }) {
   try {
-    const { rows } = await client.query(
+    const {
+      rows: [user],
+    } = await client.query(
       `
       INSERT INTO users (username, password) VALUES ($1, $2) RETURNING*;`,
       [username, password]
@@ -21,8 +23,8 @@ async function createUser({ username, password }) {
     //   }
     // );
 
-    delete rows[0].password;
-    return rows[0];
+    delete user.password;
+    return user;
   } catch (error) {
     throw error;
   }
@@ -37,15 +39,17 @@ async function getUser({ username, password }) {
 
 async function getUserById(id) {
   try {
-    const user = await client.query(
+    const {
+      rows: [user],
+    } = await client.query(
       `
         SELECT * FROM users WHERE id = $1`,
       [id]
     );
 
-    delete user.rows[0].password;
+    delete user.password;
     // console.log(user.rows[0]);
-    return user.rows[0];
+    return user;
   } catch (error) {
     throw error;
   }
