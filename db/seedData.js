@@ -2,7 +2,14 @@
 // const { } = require('./');
 const client = require("./client");
 
-const { createUser } = require("./users");
+const {
+  createUser,
+  createActivity,
+  createRoutine,
+  getRoutinesWithoutActivities,
+  getAllActivities,
+  addActivityToRoutine,
+} = require("./index");
 
 async function dropTables() {
   console.log("Dropping All Tables...");
@@ -10,9 +17,9 @@ async function dropTables() {
   try {
     client.query(`
     
-    DROP TABLE IF EXISTS routineActivities;
-    DROP TABLE IF EXISTS activities;
+    DROP TABLE IF EXISTS routine_Activities;
     DROP TABLE IF EXISTS routines;
+    DROP TABLE IF EXISTS activities;
     DROP TABLE IF EXISTS users;
     `);
     console.log("Finished Dropping Tables");
@@ -46,7 +53,7 @@ async function createTables() {
         goal TEXT NOT NULL
       );
 
-      CREATE TABLE routineActivities(
+      CREATE TABLE routine_Activities(
         id SERIAL PRIMARY KEY,
         "routineId" INTEGER REFERENCES routines(id) ,
         "activityId" INTEGER REFERENCES activities(id),
@@ -77,7 +84,7 @@ async function createInitialUsers() {
     const users = await Promise.all(usersToCreate.map(createUser));
 
     console.log("Users created:");
-    console.log(users);
+    // console.log(users);
     console.log("Finished creating users!");
   } catch (error) {
     console.error("Error creating users!");
@@ -112,7 +119,7 @@ async function createInitialActivities() {
     );
 
     console.log("activities created:");
-    console.log(activities);
+    // console.log(activities);
 
     console.log("Finished creating activities!");
   } catch (error) {
@@ -154,7 +161,7 @@ async function createInitialRoutines() {
     const routines = await Promise.all(
       routinesToCreate.map((routine) => createRoutine(routine))
     );
-    console.log("Routines Created: ", routines);
+    // console.log("Routines Created: ", routines);
     console.log("Finished creating routines.");
   } catch (error) {
     throw error;
@@ -228,7 +235,7 @@ async function createInitialRoutineActivities() {
     const routineActivities = await Promise.all(
       routineActivitiesToCreate.map(addActivityToRoutine)
     );
-    console.log("routine_activities created: ", routineActivities);
+    // console.log("routine_activities created: ", routineActivities);
     console.log("Finished creating routine_activities!");
   } catch (error) {
     throw error;
