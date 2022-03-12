@@ -23,4 +23,34 @@ async function getRoutinesWithoutActivities() {
   }
 }
 
-module.exports = { createRoutine, getRoutinesWithoutActivities };
+async function getAllRoutines(id) {
+  try {
+    const { rows } = await client.query(`
+    SELECT r.*, users.username AS "creatorName" FROM routines AS r
+    JOIN users ON users.id = r."creatorId"`);
+
+    for (const routine of rows) {
+      const { rows: activities } = await client.query(
+        `
+      SELECT a.*, ra.id AS routine_activitiesId, ra.duration, ra.count
+      FROM activities AS a
+      JOIN routine_activies AS ra ON ra."activityId" = a.id
+      WHERE ra."routineId" = ($1)
+      `,
+        [id]
+      );
+      return activities;
+    }
+
+    // console.log(rows);
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  createRoutine,
+  getRoutinesWithoutActivities,
+  getAllRoutines,
+};
