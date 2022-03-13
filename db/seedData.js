@@ -9,6 +9,7 @@ const {
   getRoutinesWithoutActivities,
   getAllActivities,
   addActivityToRoutine,
+  updateActivity,
 } = require("./index");
 
 async function dropTables() {

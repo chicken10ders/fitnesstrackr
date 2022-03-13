@@ -43,15 +43,13 @@ async function updateActivity({ id, name, description }) {
       rows: [activity],
     } = await client.query(
       `
-        UPDATE activities 
-        SET name = $2, description = $3 
-        WHERE id = $1
-        RETURNING *
+        UPDATE activities SET name = ($1), description = ($2) WHERE id = ($3) RETURNING *;
         `,
-      [id, name, description]
+      [name, description, id]
     );
+
+    // console.log(activity);
     return activity;
-    // console.log(rows[0]);
   } catch (error) {
     throw error;
   }
