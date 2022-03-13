@@ -1,5 +1,23 @@
 const client = require("./client");
 
+async function getRoutineById(id) {
+  try {
+    const {
+      rows: [routine],
+    } = await client.query(
+      `
+    SELECT *
+    FROM routines
+    WHERE id = $1
+    `,
+      [id]
+    );
+    return routine;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function createRoutine({ creatorId, isPublic, name, goal }) {
   try {
     const { rows } = await client.query(
@@ -23,4 +41,34 @@ async function getRoutinesWithoutActivities() {
   }
 }
 
-module.exports = { createRoutine, getRoutinesWithoutActivities };
+async function destroyRoutine(id) {
+  try {
+    await client.query(
+      `
+        DELETE FROM routine_activities 
+        WHERE "routineId" = $1;
+    `,
+      [id]
+    );
+    const {
+      rows: [routine],
+    } = await client.query(
+      `
+        DELETE FROM routines 
+        WHERE id = $1
+        RETURNING *
+    `,
+      [id]
+    );
+    return routine;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  createRoutine,
+  getRoutinesWithoutActivities,
+  getRoutineById,
+  destroyRoutine,
+};

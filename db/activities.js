@@ -39,12 +39,18 @@ async function getActivityById(id) {
 
 async function updateActivity({ id, name, description }) {
   try {
-    const { rows } = await client.query(
+    const {
+      rows: [activity],
+    } = await client.query(
       `
-        INSERT INTO activities (name, description) VALUES ($2,$3)
+        UPDATE activities 
+        SET name = $2, description = $3 
+        WHERE id = $1
+        RETURNING *
         `,
-      [name, description]
+      [id, name, description]
     );
+    return activity;
     // console.log(rows[0]);
   } catch (error) {
     throw error;
