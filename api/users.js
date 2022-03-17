@@ -1,9 +1,8 @@
 const express = require("express");
-const { client } = require("./db/client");
 const { getUserByUsername, createUser } = require("../db");
 const usersRouter = express.Router();
 
-/*usersRouter.post("/register", async (req, res, next) => {
+usersRouter.post("/register", async (req, res, next) => {
   const { username, password } = req.body;
   try {
     const _user = await getUserByUsername(username);
@@ -27,6 +26,6 @@ const usersRouter = express.Router();
   } catch (error) {
     next(error);
   }
-});*/
+});
 
 module.exports = usersRouter;
