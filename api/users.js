@@ -1,5 +1,5 @@
 const express = require("express");
-const { getUserByUsername, createUser } = require("../db");
+const { getUserByUsername, createUser, getUserById } = require("../db");
 const usersRouter = express.Router();
 
 usersRouter.post("/register", async (req, res, next) => {
@@ -24,6 +24,31 @@ usersRouter.post("/register", async (req, res, next) => {
       user,
     });
   } catch (error) {
+    next(error);
+  }
+});
+
+usersRouter.post("/login", async (req, res, next) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    next({
+      name: "missing username",
+      message: "Please have both a username and password",
+    });
+  }
+  try {
+    const user = await getUserByUsername(username);
+    if (user && user.password == password) {
+      res.send({ message: "Logged In" });
+    } else {
+      next({
+        name: "Incorrect Credentials",
+        message: "Username or Password are Incorrect",
+      });
+    }
+  } catch (error) {
+    console.log(error);
     next(error);
   }
 });

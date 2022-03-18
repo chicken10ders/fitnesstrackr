@@ -1,18 +1,22 @@
 // create the express server here
-//require("dotenv").config();
-const { PORT = 3000 } = process.env;
+
+require("dotenv").config();
+const PORT = process.env.PORT || 3000;
 
 const express = require("express");
 const server = express();
-//server.use(express.json());
+const morgan = require("morgan");
 
-//const cors = require("cors");
-//server.use(cors());
+server.use(morgan("dev"));
+server.use(express.json());
+
+const cors = require("cors");
+server.use(cors());
 
 const apiRouter = require("./api");
 server.use("/api", apiRouter);
 
-const { client } = require("./db/client");
+const client = require("./db/client");
 
 server.use((error, req, res, next) => {
   res.status(400);
