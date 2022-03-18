@@ -1,5 +1,7 @@
 const express = require("express");
-const { getUserByUsername, createUser } = require("../db");
+const { getUserByUsername, createUser, getUser } = require("../db");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = process.env;
 const usersRouter = express.Router();
 
 usersRouter.post("/register", async (req, res, next) => {
