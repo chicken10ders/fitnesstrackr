@@ -17,6 +17,7 @@ const apiRouter = require("./api");
 server.use("/api", apiRouter);
 
 const client = require("./db/client");
+const { getUserById } = require("./db");
 
 server.use((error, req, res, next) => {
   res.status(400);

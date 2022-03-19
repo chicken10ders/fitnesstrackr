@@ -19,7 +19,7 @@ apiRouter.use("/users", usersRouter);
 const activitiesRouter = require("./activities");
 apiRouter.use("/activities", activitiesRouter);
 
-const routineRouter = require("./routine");
-apiRouter.use("/routine", routineRouter);
+const routineRouter = require("./routines");
+apiRouter.use("/routines", routineRouter);
 
 module.exports = apiRouter;
