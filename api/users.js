@@ -1,5 +1,12 @@
 const express = require("express");
-const { getUserByUsername, createUser, getUserById } = require("../db");
+const {
+  getUserByUsername,
+  createUser,
+  getUser,
+  getPublicRoutinesByUser,
+} = require("../db");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env;
 const usersRouter = express.Router();
 
 usersRouter.post("/register", async (req, res, next) => {
@@ -29,28 +36,27 @@ usersRouter.post("/register", async (req, res, next) => {
 });
 
 usersRouter.post("/login", async (req, res, next) => {
-  const { username, password } = req.body;
+  const user = await getUser(req.body);
 
-  if (!username || !password) {
-    next({
-      name: "missing username",
-      message: "Please have both a username and password",
-    });
+  if (!user) {
+    return res.status(400).send({ error: "bad user" });
   }
-  try {
-    const user = await getUserByUsername(username);
-    if (user && user.password == password) {
-      res.send({ message: "Logged In" });
-    } else {
-      next({
-        name: "Incorrect Credentials",
-        message: "Username or Password are Incorrect",
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    next(error);
+  const token = jwt.sign(user, process.env.JWT_SECRET);
+  res.send({ token });
+});
+
+usersRouter.get("/me", (req, res) => {
+  if (!req.user) {
+    res.status(400).send("no user");
   }
+  const token = jwt.sign(user, process.env.JWT_SECRET);
+  res.send(req.user);
+});
+
+usersRouter.get("/:username/routines", async (req, res) => {
+  const user = await getUserByUsername(req.params.username);
+  const routines = await getPublicRoutinesByUser({ id: user.id });
+  res.send(routines);
 });
 
 module.exports = usersRouter;
