@@ -1,11 +1,24 @@
 const express = require("express");
 const activitiesRouter = express.Router();
-const { getAllActivities, getPublicRoutinesByActivity } = require("../db");
+const {
+  getAllActivities,
+  getPublicRoutinesByActivity,
+  createActivity,
+} = require("../db");
+const { requireUser } = require("./utils");
 
 activitiesRouter.get("/", async (req, res, next) => {
   try {
     const activities = await getAllActivities();
     res.send(activities);
+  } catch (error) {
+    next(error);
+  }
+});
+
+activitiesRouter.post("/", async (req, res, next) => {
+  const { name, description } = req.body;
+  try {
   } catch (error) {
     next(error);
   }
