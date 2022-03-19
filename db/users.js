@@ -22,6 +22,7 @@ async function createUser({ username, password }) {
 async function getUser({ username, password }) {
   try {
     const user = await getUserByUsername(username);
+
     const hashedPassword = user.password;
     const passwordsMatch = await bcrypt.compare(password, hashedPassword);
 
@@ -68,7 +69,6 @@ async function getUserByUsername(username) {
     throw error;
   }
 }
-getUserByUsername("albert");
 
 module.exports = {
   createUser,

@@ -5,6 +5,23 @@
 const express = require("express");
 const apiRouter = express.Router();
 
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env;
+
+apiRouter.use(async (req, res, next) => {
+  if (!req.headers.authorization) {
+    return next();
+  }
+  const auth = req.headers.authorization.split(" ")[1];
+  const _user = jwt.decode(auth, process.env.JWT_SECRET);
+  if (!_user) {
+    return next();
+  }
+  const user = await getUserById(_user.id);
+  req.user = user;
+  next();
+});
+
 apiRouter.get("/health", (req, res, next) => {
   try {
     res.send({ message: "The server is healthy!" });
@@ -20,6 +37,7 @@ const activitiesRouter = require("./activities");
 apiRouter.use("/activities", activitiesRouter);
 
 const routineRouter = require("./routines");
+const { getUserById } = require("../db");
 apiRouter.use("/routines", routineRouter);
 
 module.exports = apiRouter;

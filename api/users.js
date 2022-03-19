@@ -50,7 +50,9 @@ usersRouter.get("/me", (req, res) => {
     res.status(400).send("no user");
   }
   const token = jwt.sign(user, process.env.JWT_SECRET);
-  res.send(req.user);
+  if (token) {
+    res.send(req.user);
+  }
 });
 
 usersRouter.get("/:username/routines", async (req, res) => {
