@@ -42,7 +42,6 @@ routineActivityRouter.delete(
   requireUser,
   async (req, res, next) => {
     try {
-      //const { count, duration } = req.body;
       const { routineActivityId: id } = req.params;
       const { id: userId } = req.user;
       const routineActivity = await getRoutineActivityById(id);
@@ -52,7 +51,7 @@ routineActivityRouter.delete(
         res.send(deleteRoutineActivity);
       } else {
         next({
-          message: "You cannot edit this activity.",
+          message: "You cannot delete this activity.",
         });
       }
     } catch (error) {
