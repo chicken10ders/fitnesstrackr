@@ -49,15 +49,15 @@ usersRouter.get("/me", (req, res) => {
   if (!req.user) {
     res.status(400).send("no user");
   }
-  const token = jwt.sign(user, process.env.JWT_SECRET);
-  if (token) {
-    res.send(req.user);
-  }
+  res.send(req.user);
 });
 
 usersRouter.get("/:username/routines", async (req, res) => {
   const user = await getUserByUsername(req.params.username);
-  const routines = await getPublicRoutinesByUser({ id: user.id });
+  // console.log(user);
+  const routines = await getPublicRoutinesByUser(user);
+
+  // console.log(routines)
   res.send(routines);
 });
 
