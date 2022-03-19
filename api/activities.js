@@ -4,6 +4,7 @@ const {
   getAllActivities,
   getPublicRoutinesByActivity,
   createActivity,
+  updateActivity,
 } = require("../db");
 const { requireUser } = require("./utils");
 
@@ -16,9 +17,30 @@ activitiesRouter.get("/", async (req, res, next) => {
   }
 });
 
-activitiesRouter.post("/", async (req, res, next) => {
+activitiesRouter.post("/", requireUser, async (req, res, next) => {
   const { name, description } = req.body;
   try {
+    const newActivity = await createActivity({ name, description });
+    if (newActivity) {
+      res.send(newActivity);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+activitiesRouter.patch("/:activityId", requireUser, async (req, res, next) => {
+  try {
+    const { activityId } = req.params;
+    const { name, description } = req.body;
+    const newActivity = await updateActivity({
+      id: activityId,
+      name,
+      description,
+    });
+    if (newActivity) {
+      res.send(newActivity);
+    }
   } catch (error) {
     next(error);
   }
