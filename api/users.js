@@ -54,7 +54,10 @@ usersRouter.get("/me", (req, res) => {
 
 usersRouter.get("/:username/routines", async (req, res) => {
   const user = await getUserByUsername(req.params.username);
-  const routines = await getPublicRoutinesByUser({ id: user.id });
+  // console.log(user);
+  const routines = await getPublicRoutinesByUser(user);
+
+  // console.log(routines)
   res.send(routines);
 });
 
